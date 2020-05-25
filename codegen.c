@@ -2,7 +2,7 @@
 
 static void gen(Node *node) {
   if (node->kind == ND_NUM) {
-    printf("  push %d\n", node->val);
+    printf("  push %ld\n", node->val);
     return;
   }
 
@@ -53,11 +53,13 @@ static void gen(Node *node) {
 
 void codegen(Node *node) {
   printf(".intel_syntax noprefix\n");
-  printf(".globl main\n");
+  printf(".global main\n");
   printf("main:\n");
 
-  gen(node);
+  for (Node *n = node; n; n = n->next) {
+    gen(n);
+    printf("  pop rax\n");
+  }
 
-  printf("  pop rax\n");
   printf("  ret\n");
 }

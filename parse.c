@@ -13,12 +13,14 @@ static Node *new_binary(NodeKind kind, Node *lhs, Node *rhs) {
   return node;
 }
 
-static Node *new_num(int val) {
+static Node *new_num(long val) {
   Node *node = new_node(ND_NUM);
   node->val = val;
   return node;
 }
 
+static Node *stmt();
+static Node *expr();
 static Node *equality();
 static Node *relational();
 static Node *add();
@@ -26,7 +28,24 @@ static Node *mul();
 static Node *unary();
 static Node *primary();
 
-Node *expr() {
+Node *program() {
+  Node head = {};
+  Node *cur = &head;
+
+  while (!at_eof()) {
+    cur->next = stmt();
+    cur = cur->next;
+  }
+  return head.next;
+}
+
+static Node *stmt() {
+  Node *node = expr();
+  expect(";");
+  return node;
+}
+
+static Node *expr() {
   return equality();
 }
 
@@ -88,7 +107,7 @@ static Node *mul() {
 
 static Node *unary() {
   if (consume("+"))
-    return primary();
+    return unary();
   if (consume("-"))
     return new_binary(ND_SUB, new_num(0), unary());
   return primary();

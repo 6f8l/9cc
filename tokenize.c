@@ -26,7 +26,7 @@ void error_at(char *loc, char *fmt, ...) {
 
 bool consume(char *op) {
   if (token->kind != TK_RESERVED || strlen(op) != token->len ||
-      memcmp(token->str, op, token->len))
+      strncmp(token->str, op, token->len))
     return false;
   token = token->next;
   return true;
@@ -34,7 +34,7 @@ bool consume(char *op) {
 
 void expect(char *op) {
   if (token->kind != TK_RESERVED || strlen(op) != token->len ||
-      memcmp(token->str, op, token->len))
+      strncmp(token->str, op, token->len))
     error_at(token->str, "expected \"%s\"", op);
   token = token->next;
 }
@@ -42,7 +42,7 @@ void expect(char *op) {
 long expect_number() {
   if (token->kind != TK_NUM)
     error_at(token->str, "expected a number");
-  int val = token->val;
+  long val = token->val;
   token = token->next;
   return val;
 }
@@ -61,13 +61,12 @@ static Token *new_token(TokenKind kind, Token *cur, char *str, int len) {
 }
 
 static bool startswith(char *p, char *q) {
-  return memcmp(p, q, strlen(q)) == 0;
+  return strncmp(p, q, strlen(q)) == 0;
 }
 
 Token *tokenize() {
   char *p = user_input;
-  Token head;
-  head.next = NULL;
+  Token head = {};
   Token *cur = &head;
 
   while (*p) {
@@ -83,7 +82,7 @@ Token *tokenize() {
       continue;
     }
 
-    if (strchr("+-*/()<>", *p)) {
+    if (ispunct(*p)) {
       cur = new_token(TK_RESERVED, cur, p++, 1);
       continue;
     }

@@ -19,7 +19,7 @@ typedef struct Token Token;
 struct Token {
   TokenKind kind;
   Token *next;
-  int val;
+  long val;
   char *str;
   int len;
 };
@@ -41,26 +41,27 @@ extern Token *token;
 //
 
 typedef enum {
-  ND_ADD,
-  ND_SUB,
-  ND_MUL,
-  ND_DIV,
-  ND_EQ,
-  ND_NE,
-  ND_LT,
-  ND_LE,
-  ND_NUM,
+  ND_ADD, // +
+  ND_SUB, // -
+  ND_MUL, // *
+  ND_DIV, // /
+  ND_EQ,  // ==
+  ND_NE,  // !=
+  ND_LT,  // <
+  ND_LE,  // <=
+  ND_NUM, // Integer
 } NodeKind;
 
 typedef struct Node Node;
 struct Node {
   NodeKind kind;
+  Node *next;
   Node *lhs;
   Node *rhs;
-  int val;
+  long val;
 };
 
-Node *expr();
+Node *program();
 
 //
 // codegen.c
