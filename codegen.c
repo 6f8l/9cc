@@ -11,13 +11,13 @@ static void gen_addr(Node *node) {
   error("not an lvalue");
 }
 
-static void load() {
+static void load(void) {
   printf("  pop rax\n");
   printf("  mov rax, [rax]\n");
   printf("  push rax\n");
 }
 
-static void store() {
+static void store(void) {
   printf("  pop rdi\n");
   printf("  pop rax\n");
   printf("  mov [rax], rdi\n");

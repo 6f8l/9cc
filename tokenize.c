@@ -47,7 +47,7 @@ void expect(char *op) {
   token = token->next;
 }
 
-long expect_number() {
+long expect_number(void) {
   if (token->kind != TK_NUM)
     error_at(token->str, "expected a number");
   long val = token->val;
@@ -55,7 +55,7 @@ long expect_number() {
   return val;
 }
 
-bool at_eof() {
+bool at_eof(void) {
   return token->kind == TK_EOF;
 }
 
@@ -80,7 +80,7 @@ static bool is_alnum(char c) {
   return is_alpha(c) || ('0' <= c && c <= '9');
 }
 
-Token *tokenize() {
+Token *tokenize(void) {
   char *p = user_input;
   Token head = {};
   Token *cur = &head;

@@ -31,17 +31,17 @@ static Node *new_var_node(char name) {
   return node;
 }
 
-static Node *stmt();
-static Node *expr();
-static Node *assign();
-static Node *equality();
-static Node *relational();
-static Node *add();
-static Node *mul();
-static Node *unary();
-static Node *primary();
+static Node *stmt(void);
+static Node *expr(void);
+static Node *assign(void);
+static Node *equality(void);
+static Node *relational(void);
+static Node *add(void);
+static Node *mul(void);
+static Node *unary(void);
+static Node *primary(void);
 
-Node *program() {
+Node *program(void) {
   Node head = {};
   Node *cur = &head;
 
@@ -52,7 +52,7 @@ Node *program() {
   return head.next;
 }
 
-static Node *stmt() {
+static Node *stmt(void) {
   if (consume("return")) {
     Node *node = new_unary(ND_RETURN, expr());
     expect(";");
@@ -64,18 +64,18 @@ static Node *stmt() {
   return node;
 }
 
-static Node *expr() {
+static Node *expr(void) {
   return assign();
 }
 
-static Node *assign() {
+static Node *assign(void) {
   Node *node = equality();
   if (consume("="))
     node = new_binary(ND_ASSIGN, node, assign());
   return node;
 }
 
-static Node *equality() {
+static Node *equality(void) {
   Node *node = relational();
 
   for (;;) {
@@ -88,7 +88,7 @@ static Node *equality() {
   }
 }
 
-static Node *relational() {
+static Node *relational(void) {
   Node *node = add();
 
   for (;;) {
@@ -105,7 +105,7 @@ static Node *relational() {
   }
 }
 
-static Node *add() {
+static Node *add(void) {
   Node *node = mul();
 
   for (;;) {
@@ -118,7 +118,7 @@ static Node *add() {
   }
 }
 
-static Node *mul() {
+static Node *mul(void) {
   Node *node = unary();
 
   for (;;) {
@@ -131,7 +131,7 @@ static Node *mul() {
   }
 }
 
-static Node *unary() {
+static Node *unary(void) {
   if (consume("+"))
     return unary();
   if (consume("-"))
@@ -139,7 +139,7 @@ static Node *unary() {
   return primary();
 }
 
-static Node *primary() {
+static Node *primary(void) {
   if (consume("(")) {
     Node *node = expr();
     expect(")");
